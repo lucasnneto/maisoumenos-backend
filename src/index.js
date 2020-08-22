@@ -234,7 +234,7 @@ app.get("/api/login/:id", (req, res) => {
 //adiciona ao array
 app.post("/api/consulta", async (req, res) => {
   console.log("POST >>>>");
-  if (!req.body.nome) {
+  if (!req.body.pid) {
     res.status(400).send("Invalido");
     return;
   }
@@ -369,7 +369,7 @@ app.post("/api/paciente", async (req, res) => {
 });
 app.post("/api/funcionario", async (req, res) => {
   console.log("POST >>>>");
-  if (!req.body.nome) {
+  if (!req.body.mid) {
     res.status(400).send("Invalido");
     return;
   }
@@ -401,7 +401,7 @@ app.post("/api/funcionario", async (req, res) => {
 });
 app.post("/api/login", async (req, res) => {
   console.log("POST >>>>");
-  if (!req.body.nome) {
+  if (!req.body.usuario) {
     res.status(400).send("Invalido");
     return;
   }
