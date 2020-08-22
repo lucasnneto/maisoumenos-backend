@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const users = new Schema({
+const medico = new Schema({
   nome: {
     type: String,
     require: true,
   },
-  tipo: {
+  area: {
     type: String,
     require: true,
   },
 });
-mongoose.model("users", users);
+mongoose.model("medico", medico);
