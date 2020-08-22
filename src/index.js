@@ -6,10 +6,12 @@ require("../models/consulta");
 require("../models/hospital");
 require("../models/medico");
 require("../models/paciente");
+require("../models/funcionario");
 const consulta = mongoose.model("consulta");
 const hospital = mongoose.model("hospital");
 const medico = mongoose.model("medico");
 const paciente = mongoose.model("paciente");
+const funcionario = mongoose.model("funcionario");
 
 //Conexão com banco de dados
 mongoose.connect(
@@ -110,7 +112,20 @@ app.get("/api/paciente", (req, res) => {
       res.status(404).send("Não foi encontrado nada!!");
     });
 });
-
+app.get("/api/funcionario", (req, res) => {
+  // a document instance
+  funcionario
+    .find()
+    .then((data) => {
+      console.log("getAll funcionario >>>");
+      console.log(data);
+      res.send(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(404).send("Não foi encontrado nada!!");
+    });
+});
 //
 // GET BY ID
 //
@@ -168,6 +183,19 @@ app.get("/api/paciente/:id", (req, res) => {
       res.status(404).send(" 404 - Usuario não encontrado");
     });
 });
+app.get("/api/funcionario/:id", (req, res) => {
+  funcionario
+    .find({ _id: req.params.id })
+    .then((doc) => {
+      console.log("getbyId >>>");
+      console.log(doc);
+      res.send(doc);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(404).send(" 404 - Usuario não encontrado");
+    });
+});
 
 //
 // POST
@@ -176,7 +204,7 @@ app.get("/api/paciente/:id", (req, res) => {
 //adiciona ao array
 app.post("/api/consulta", async (req, res) => {
   console.log("POST >>>>");
-  if (!req.body.name) {
+  if (!req.body.nome) {
     res.status(400).send("Invalido");
     return;
   }
@@ -184,8 +212,12 @@ app.post("/api/consulta", async (req, res) => {
     // compile schema to model
 
     const a = {
-      nome: req.body.name,
-      tipo: req.body.type,
+      pid: req.body.pid,
+      fid: req.body.hid,
+      time: req.body.time,
+      sintomas: req.body.sintomas,
+      valor: req.body.valor,
+
     };
 
     // a document instance
@@ -208,7 +240,7 @@ app.post("/api/consulta", async (req, res) => {
 });
 app.post("/api/hospital", async (req, res) => {
   console.log("POST >>>>");
-  if (!req.body.name) {
+  if (!req.body.nome) {
     res.status(400).send("Invalido");
     return;
   }
@@ -216,8 +248,9 @@ app.post("/api/hospital", async (req, res) => {
     // compile schema to model
 
     const a = {
-      nome: req.body.name,
-      tipo: req.body.type,
+      nome: req.body.nome,
+      endereco : req.body.endereco,
+      covid : req.body.covid
     };
 
     // a document instance
@@ -240,7 +273,7 @@ app.post("/api/hospital", async (req, res) => {
 });
 app.post("/api/medico", async (req, res) => {
   console.log("POST >>>>");
-  if (!req.body.name) {
+  if (!req.body.nome) {
     res.status(400).send("Invalido");
     return;
   }
@@ -248,8 +281,8 @@ app.post("/api/medico", async (req, res) => {
     // compile schema to model
 
     const a = {
-      nome: req.body.name,
-      tipo: req.body.type,
+      nome: req.body.nome,
+      area: req.body.area,
     };
 
     // a document instance
@@ -272,7 +305,7 @@ app.post("/api/medico", async (req, res) => {
 });
 app.post("/api/paciente", async (req, res) => {
   console.log("POST >>>>");
-  if (!req.body.name) {
+  if (!req.body.nome) {
     res.status(400).send("Invalido");
     return;
   }
@@ -280,12 +313,44 @@ app.post("/api/paciente", async (req, res) => {
     // compile schema to model
 
     const a = {
-      nome: req.body.name,
-      tipo: req.body.type,
+      nome: req.body.nome,
+      cpf: req.body.cpf,
     };
 
     // a document instance
     var novo = new paciente(a);
+
+    // save model to database
+    novo
+      .save()
+      .then((res) => {
+        console.log("OK!");
+      })
+      .catch((err) => {
+        console.log("ERRO");
+      });
+    return res.send(novo);
+  } catch (err) {
+    res.send(err);
+    return res.status(400);
+  }
+});
+app.post("/api/funcionario", async (req, res) => {
+  console.log("POST >>>>");
+  if (!req.body.nome) {
+    res.status(400).send("Invalido");
+    return;
+  }
+  try {
+    // compile schema to model
+
+    const a = {
+      hid: req.body.hid,
+      mid: req.body.mid,
+    };
+
+    // a document instance
+    var novo = new funcionario(a);
 
     // save model to database
     novo
@@ -309,7 +374,7 @@ app.post("/api/paciente", async (req, res) => {
 
 app.put("/api/paciente/:id", (req, res) => {
   console.log("PUT >>>>");
-  users
+  paciente
     .findOne({ _id: req.params.id })
     .then((reso) => {
       console.log(reso);
@@ -334,14 +399,13 @@ app.put("/api/paciente/:id", (req, res) => {
 });
 app.put("/api/consulta/:id", (req, res) => {
   console.log("PUT >>>>");
-  users
+  consulta
     .findOne({ _id: req.params.id })
     .then((reso) => {
       console.log(reso);
 
       reso.pid = req.body.pid;
-      reso.hid = req.body.hid;
-      reso.did = req.body.did;
+      reso.fid = req.body.fid;
       reso.time = req.body.time;
       reso.sintomas = req.body.sintomas;
       reso.valor =  req.body.valor;
@@ -365,12 +429,11 @@ app.put("/api/consulta/:id", (req, res) => {
 
 app.put("/api/hospital/:id", (req, res) => {
   console.log("PUT >>>>");
-  users
+  hospital
     .findOne({ _id: req.params.id })
     .then((reso) => {
       console.log(reso);
 
-      reso.medico = req.body.medico;
       reso.nome = req.body.nome;
       reso.endereco = req.body.endereco;
       reso.covid = req.body.covid;
@@ -393,7 +456,7 @@ app.put("/api/hospital/:id", (req, res) => {
 
 app.put("/api/medico/:id", (req, res) => {
   console.log("PUT >>>>");
-  users
+  medico
     .findOne({ _id: req.params.id })
     .then((reso) => {
       console.log(reso);
@@ -417,6 +480,31 @@ app.put("/api/medico/:id", (req, res) => {
   //update
 });
 
+app.put("/api/funcionario/:id", (req, res) => {
+  console.log("PUT >>>>");
+  funcionario
+    .findOne({ _id: req.params.id })
+    .then((reso) => {
+      console.log(reso);
+
+      reso.hid = req.body.hid;
+      reso.mid = req.body.mid;
+      reso
+        .save()
+        .then((reso) => {
+          console.log("Salvo");
+          return res.send(reso);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  //update
+});
 
 //
 // DELETE
@@ -470,7 +558,18 @@ app.delete("/api/paciente/:id", (req, res) => {
       console.log(err);
     });
 });
-
+app.delete("/api/funcionario/:id", (req, res) => {
+  console.log("DELETE >>>>");
+  funcionario
+    .deleteOne({ _id: req.params.id })
+    .then((reso) => {
+      console.log(reso);
+      return res.send(reso);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 //Ouve a porta...
 app.listen(process.env.PORT || porta, () => {
   console.log("Listen port.....");

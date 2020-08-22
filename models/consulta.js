@@ -6,11 +6,7 @@ const consulta = new Schema({
     type: String,
     require: true,
   },
-  hid: {
-    type: String,
-    require: true,
-  },
-  did: {
+  fid: {
     type: String,
     require: true,
   },

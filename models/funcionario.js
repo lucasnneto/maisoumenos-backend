@@ -1,17 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const hospital = new Schema({
-  nome: {
+const funcionario = new Schema({
+  hid: {
     type: String,
     require: true,
   },
-  endereco: {
+  mid: {
     type: String,
-    require: true,
-  },
-  covid: {
-    type: Boolean,
     require: true,
   },
 
