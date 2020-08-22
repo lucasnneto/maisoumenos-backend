@@ -1,27 +1,22 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const hospital = new Schema({
-  nome: {
+const login = new Schema({
+  usuario: {
     type: String,
     require: true,
   },
-  endereco: {
+  senha: {
     type: String,
     require: true,
   },
-  lat: {
-    type: Number,
+  tipo: {
+    type: String,
     require: true,
   },
-  lng: {
-    type: Number,
+  id: {
+    type: String,
     require: true,
   },
-  covid: {
-    type: Boolean,
-    require: true,
-  },
-
 });
-mongoose.model("hospital", hospital);
+mongoose.model("login", login);

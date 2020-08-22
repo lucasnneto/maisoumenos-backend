@@ -7,11 +7,14 @@ require("../models/hospital");
 require("../models/medico");
 require("../models/paciente");
 require("../models/funcionario");
+require("../models/login");
+
 const consulta = mongoose.model("consulta");
 const hospital = mongoose.model("hospital");
 const medico = mongoose.model("medico");
 const paciente = mongoose.model("paciente");
 const funcionario = mongoose.model("funcionario");
+const login = mongoose.model("login");
 
 //Conexão com banco de dados
 mongoose.connect(
@@ -126,6 +129,20 @@ app.get("/api/funcionario", (req, res) => {
       res.status(404).send("Não foi encontrado nada!!");
     });
 });
+app.get("/api/login", (req, res) => {
+  // a document instance
+  login
+    .find()
+    .then((data) => {
+      console.log("getAll funcionario >>>");
+      console.log(data);
+      res.send(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(404).send("Não foi encontrado nada!!");
+    });
+});
 //
 // GET BY ID
 //
@@ -196,6 +213,19 @@ app.get("/api/funcionario/:id", (req, res) => {
       res.status(404).send(" 404 - Usuario não encontrado");
     });
 });
+app.get("/api/login/:id", (req, res) => {
+  login
+    .find({ _id: req.params.id })
+    .then((doc) => {
+      console.log("getbyId >>>");
+      console.log(doc);
+      res.send(doc);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(404).send(" 404 - Usuario não encontrado");
+    });
+});
 
 //
 // POST
@@ -250,6 +280,8 @@ app.post("/api/hospital", async (req, res) => {
     const a = {
       nome: req.body.nome,
       endereco : req.body.endereco,
+      lat: req.body.lat,
+      lng : req.body.lng,
       covid : req.body.covid
     };
 
@@ -367,6 +399,40 @@ app.post("/api/funcionario", async (req, res) => {
     return res.status(400);
   }
 });
+app.post("/api/login", async (req, res) => {
+  console.log("POST >>>>");
+  if (!req.body.nome) {
+    res.status(400).send("Invalido");
+    return;
+  }
+  try {
+    // compile schema to model
+
+    const a = {
+      usuario: req.body.usuario,
+      senha : req.body.senha,
+      id: req.body.id,
+      tipo : req.body.tipo,
+    };
+
+    // a document instance
+    var novo = new login(a);
+
+    // save model to database
+    novo
+      .save()
+      .then((res) => {
+        console.log("OK!");
+      })
+      .catch((err) => {
+        console.log("ERRO");
+      });
+    return res.send(novo);
+  } catch (err) {
+    res.send(err);
+    return res.status(400);
+  }
+});
 
 //
 // PUT
@@ -437,6 +503,8 @@ app.put("/api/hospital/:id", (req, res) => {
       reso.nome = req.body.nome;
       reso.endereco = req.body.endereco;
       reso.covid = req.body.covid;
+      reso.lat = req.body.lat;
+      reso.lng = req.body.lng;
       reso
         .save()
         .then((reso) => {

@@ -12,4 +12,4 @@ const funcionario = new Schema({
   },
 
 });
-mongoose.model("hospital", hospital);
+mongoose.model("funcionario", funcionario);
