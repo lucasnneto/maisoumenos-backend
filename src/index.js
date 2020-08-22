@@ -249,7 +249,7 @@ app.post("/api/medico", async (req, res) => {
 
     const a = {
       nome: req.body.name,
-      tipo: req.body.type,
+      area: req.body.type,
     };
 
     // a document instance
@@ -281,7 +281,7 @@ app.post("/api/paciente", async (req, res) => {
 
     const a = {
       nome: req.body.name,
-      tipo: req.body.type,
+      cpf: req.body.cpf,
     };
 
     // a document instance
