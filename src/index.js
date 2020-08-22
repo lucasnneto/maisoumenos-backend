@@ -249,7 +249,7 @@ app.post("/api/medico", async (req, res) => {
 
     const a = {
       nome: req.body.name,
-      area: req.body.type,
+      tipo: req.body.type,
     };
 
     // a document instance
@@ -281,7 +281,7 @@ app.post("/api/paciente", async (req, res) => {
 
     const a = {
       nome: req.body.name,
-      cpf: req.body.cpf,
+      tipo: req.body.type,
     };
 
     // a document instance
@@ -314,8 +314,8 @@ app.put("/api/paciente/:id", (req, res) => {
     .then((reso) => {
       console.log(reso);
 
-      reso.nome = req.body.name;
-      reso.tipo = req.body.type;
+      reso.nome = req.body.nome;
+      reso.cpf = req.body.cpf;
       reso
         .save()
         .then((reso) => {
@@ -332,6 +332,91 @@ app.put("/api/paciente/:id", (req, res) => {
 
   //update
 });
+app.put("/api/consulta/:id", (req, res) => {
+  console.log("PUT >>>>");
+  users
+    .findOne({ _id: req.params.id })
+    .then((reso) => {
+      console.log(reso);
+
+      reso.pid = req.body.pid;
+      reso.hid = req.body.hid;
+      reso.did = req.body.did;
+      reso.time = req.body.time;
+      reso.sintomas = req.body.sintomas;
+      reso.valor =  req.body.valor;
+
+      reso
+        .save()
+        .then((reso) => {
+          console.log("Salvo");
+          return res.send(reso);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  //update
+});
+
+app.put("/api/hospital/:id", (req, res) => {
+  console.log("PUT >>>>");
+  users
+    .findOne({ _id: req.params.id })
+    .then((reso) => {
+      console.log(reso);
+
+      reso.medico = req.body.medico;
+      reso.nome = req.body.nome;
+      reso.endereco = req.body.endereco;
+      reso.covid = req.body.covid;
+      reso
+        .save()
+        .then((reso) => {
+          console.log("Salvo");
+          return res.send(reso);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  //update
+});
+
+app.put("/api/medico/:id", (req, res) => {
+  console.log("PUT >>>>");
+  users
+    .findOne({ _id: req.params.id })
+    .then((reso) => {
+      console.log(reso);
+
+      reso.nome = req.body.nome;
+      reso.area = req.body.area;
+      reso
+        .save()
+        .then((reso) => {
+          console.log("Salvo");
+          return res.send(reso);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  //update
+});
+
 
 //
 // DELETE
