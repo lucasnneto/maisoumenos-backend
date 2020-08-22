@@ -23,7 +23,7 @@ const consulta = new Schema({
     require: true,
   },
   valor: {
-    type: number,
+    type: Number,
     require: true,
   },
 });
