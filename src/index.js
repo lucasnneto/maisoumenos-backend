@@ -226,6 +226,78 @@ app.get("/api/login/:id", (req, res) => {
       res.status(404).send(" 404 - Usuario não encontrado");
     });
 });
+app.get("/api/hospital/:id/pacientes",(req,res) => {
+
+  funcionario
+    .find({_hid:req.param.id})
+    .then((fun)=>{
+      console.log("asdasd",fun)
+      consulta
+         .find({
+           fid:{
+             $in:fun.map(f=>f._id)
+            }
+          })
+         .then((cons)=>{
+          console.log("asdasd",cons)
+           paciente
+              .find(
+                {
+                  _id:{
+                    $in:cons.map(c=>c.pid)
+                  }
+                }
+              )
+              .then((pac)=>{
+                console.log("asdasd",pac)
+                res.send(pac);
+              });
+         });
+  });
+});
+
+app.get("/api/hospital/:id/consultas",(req,res) => {
+
+  funcionario
+  .find({_hid:req.param.id})
+  .then((fun)=>{
+    console.log("asdasd",fun)
+         consulta
+            .find(
+              {
+                fid:{
+                  $in:fun.map(c=>c._id)
+                }
+              }
+            )
+            .then((pac)=>{
+              console.log("asdasd",pac)
+              res.send(pac);
+            });
+      
+      });
+});
+
+app.get("/api/hospital/:id/medicos",(req,res) => {
+  funcionario
+  .find({_hid:req.param.id})
+  .then((fun)=>{
+    console.log("asdasd",fun)
+         medico
+            .find(
+              {
+                _id:{
+                  $in:fun.map(c=>c.mid)
+                }
+              }
+            )
+            .then((pac)=>{
+              console.log("asdasd",pac)
+              res.send(pac);
+            });
+      
+      });
+});
 
 //
 // POST
@@ -243,7 +315,7 @@ app.post("/api/consulta", async (req, res) => {
 
     const a = {
       pid: req.body.pid,
-      fid: req.body.hid,
+      fid: req.body.fid,
       time: req.body.time,
       sintomas: req.body.sintomas,
       valor: req.body.valor,

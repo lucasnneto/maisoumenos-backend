@@ -10,11 +10,11 @@ const consulta = new Schema({
     type: String,
     require: true,
   },
-  horario: {
+  time: {
     type: Date,
     require: true,
   },
-  sistomas: {
+  sintomas: {
     type: String,
     require: true,
   },
