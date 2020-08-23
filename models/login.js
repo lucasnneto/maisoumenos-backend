@@ -11,7 +11,7 @@ const login = new Schema({
     require: true,
   },
   tipo: {
-    type: String,
+    type: Boolean,
     require: true,
   },
   id: {
