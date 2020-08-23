@@ -298,7 +298,30 @@ app.get("/api/hospital/:id/medicos",(req,res) => {
       
       });
 });
+app.get("/api/funcionario/:id/medicos",(req,res) => {
 
+  var k = req.params.id;
+
+  console.log(k);
+  funcionario
+  .find({_id:k})
+  .then((fun)=>{
+    console.log("asdasd",fun)
+         medico
+            .find(
+              {
+                _id:{
+                  $in:fun.map(c=>c.mid)
+                }
+              }
+            )
+            .then((pac)=>{
+              console.log("asdasd",pac)
+              res.send(pac);
+            });
+      
+      });
+});
 //
 // POST
 //
@@ -316,7 +339,7 @@ app.post("/api/consulta", async (req, res) => {
     const a = {
       pid: req.body.pid,
       fid: req.body.fid,
-      time: req.body.time,
+      time: Date(req.body.time),
       sintomas: req.body.sintomas,
       valor: req.body.valor,
 
@@ -544,7 +567,7 @@ app.put("/api/consulta/:id", (req, res) => {
 
       reso.pid = req.body.pid;
       reso.fid = req.body.fid;
-      reso.time = req.body.time;
+      reso.time = Date.now();
       reso.sintomas = req.body.sintomas;
       reso.valor =  req.body.valor;
 
