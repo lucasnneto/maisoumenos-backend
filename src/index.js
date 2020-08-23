@@ -226,77 +226,76 @@ app.get("/api/login/:id", (req, res) => {
       res.status(404).send(" 404 - Usuario não encontrado");
     });
 });
-app.get("/api/hospital/:id/pacientes",(req,res) => {
-
-  funcionario
-    .find({_hid:req.param.id})
-    .then((fun)=>{
-      console.log("asdasd",fun)
-      consulta
-         .find({
-           fid:{
-             $in:fun.map(f=>f._id)
-            }
+app.get("/api/hospital/:id/pacientes", (req, res) => {
+  funcionario.find({ _hid: req.param.id }).then((fun) => {
+    console.log("asdasd", fun);
+    consulta
+      .find({
+        fid: {
+          $in: fun.map((f) => f._id),
+        },
+      })
+      .then((cons) => {
+        console.log("asdasd", cons);
+        paciente
+          .find({
+            _id: {
+              $in: cons.map((c) => c.pid),
+            },
           })
-         .then((cons)=>{
-          console.log("asdasd",cons)
-           paciente
-              .find(
-                {
-                  _id:{
-                    $in:cons.map(c=>c.pid)
-                  }
-                }
-              )
-              .then((pac)=>{
-                console.log("asdasd",pac)
-                res.send(pac);
-              });
-         });
+          .then((pac) => {
+            console.log("asdasd", pac);
+            res.send(pac);
+          });
+      });
   });
 });
 
-app.get("/api/hospital/:id/consultas",(req,res) => {
-
-  funcionario
-  .find({_hid:req.param.id})
-  .then((fun)=>{
-    console.log("asdasd",fun)
-         consulta
-            .find(
-              {
-                fid:{
-                  $in:fun.map(c=>c._id)
-                }
-              }
-            )
-            .then((pac)=>{
-              console.log("asdasd",pac)
-              res.send(pac);
-            });
-      
+app.get("/api/hospital/:id/consultas", (req, res) => {
+  funcionario.find({ _hid: req.param.id }).then((fun) => {
+    console.log("asdasd", fun);
+    consulta
+      .find({
+        fid: {
+          $in: fun.map((c) => c._id),
+        },
+      })
+      .then((pac) => {
+        console.log("asdasd", pac);
+        res.send(pac);
       });
+  });
+});
+app.get("/api/funcionario/:id/medicos", (req, res) => {
+  funcionario.find({ _id: req.params.id }).then((fun) => {
+    console.log("asdasd", fun);
+    medico
+      .find({
+        _id: {
+          $in: fun.map((c) => c.mid),
+        },
+      })
+      .then((pac) => {
+        console.log("asdasd", pac);
+        res.send(pac);
+      });
+  });
 });
 
-app.get("/api/hospital/:id/medicos",(req,res) => {
-  funcionario
-  .find({_hid:req.param.id})
-  .then((fun)=>{
-    console.log("asdasd",fun)
-         medico
-            .find(
-              {
-                _id:{
-                  $in:fun.map(c=>c.mid)
-                }
-              }
-            )
-            .then((pac)=>{
-              console.log("asdasd",pac)
-              res.send(pac);
-            });
-      
+app.get("/api/hospital/:id/medicos", (req, res) => {
+  funcionario.find({ _hid: req.param.id }).then((fun) => {
+    console.log("asdasd", fun);
+    medico
+      .find({
+        _id: {
+          $in: fun.map((c) => c.mid),
+        },
+      })
+      .then((pac) => {
+        console.log("asdasd", pac);
+        res.send(pac);
       });
+  });
 });
 
 //
@@ -319,7 +318,6 @@ app.post("/api/consulta", async (req, res) => {
       time: req.body.time,
       sintomas: req.body.sintomas,
       valor: req.body.valor,
-
     };
 
     // a document instance
@@ -351,10 +349,10 @@ app.post("/api/hospital", async (req, res) => {
 
     const a = {
       nome: req.body.nome,
-      endereco : req.body.endereco,
+      endereco: req.body.endereco,
       lat: req.body.lat,
-      lng : req.body.lng,
-      covid : req.body.covid
+      lng: req.body.lng,
+      covid: req.body.covid,
     };
 
     // a document instance
@@ -482,9 +480,9 @@ app.post("/api/login", async (req, res) => {
 
     const a = {
       usuario: req.body.usuario,
-      senha : req.body.senha,
+      senha: req.body.senha,
       id: req.body.id,
-      tipo : req.body.tipo,
+      tipo: req.body.tipo,
     };
 
     // a document instance
@@ -546,7 +544,7 @@ app.put("/api/consulta/:id", (req, res) => {
       reso.fid = req.body.fid;
       reso.time = req.body.time;
       reso.sintomas = req.body.sintomas;
-      reso.valor =  req.body.valor;
+      reso.valor = req.body.valor;
 
       reso
         .save()
