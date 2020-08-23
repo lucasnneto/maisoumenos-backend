@@ -57,7 +57,10 @@ app.get("/api", (req, res) => {
       res.status(404).send("Não foi encontrado nada!!");
     });
 });
-
+app.get("/api/teste", (req, res) => {
+  // a document instance
+  xhr.open("GET","cmaisoumenos.herokuapp.com/api/consulta")
+});
 //
 // GET ALL
 //
@@ -178,6 +181,16 @@ app.get("/api/consulta/:id/pegaPaciente", (req, res) => {
         console.log("asdasd", pac);
         res.send(pac);
       });
+  });
+});
+
+app.get("/api/paciente/:id/pegaConsulta", (req, res) => {
+  consulta
+    .find({ pid: req.params.id })
+    .then((fun) => {
+    console.log("asdasd", fun);
+    res.send(fun);
+    
   });
 });
 
@@ -831,6 +844,18 @@ app.delete("/api/paciente/:id", (req, res) => {
 app.delete("/api/funcionario/:id", (req, res) => {
   console.log("DELETE >>>>");
   funcionario
+    .deleteOne({ _id: req.params.id })
+    .then((reso) => {
+      console.log(reso);
+      return res.send(reso);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+app.delete("/api/login/:id", (req, res) => {
+  console.log("DELETE >>>>");
+  login
     .deleteOne({ _id: req.params.id })
     .then((reso) => {
       console.log(reso);
