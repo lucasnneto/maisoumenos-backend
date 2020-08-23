@@ -335,7 +335,7 @@ app.get("/api/login/:id", (req, res) => {
     });
 });
 app.get("/api/hospital/:id/pacientes", (req, res) => {
-  funcionario.find({ _hid: req.param.id }).then((fun) => {
+  funcionario.find({ hid: req.params.id }).then((fun) => {
     console.log("asdasd", fun);
     consulta
       .find({
@@ -360,8 +360,9 @@ app.get("/api/hospital/:id/pacientes", (req, res) => {
 });
 
 app.get("/api/hospital/:id/consultas", (req, res) => {
-  funcionario.find({ _hid: req.param.id }).then((fun) => {
-    console.log("asdasd", fun);
+  console.log("req - ", req.params.id);
+  funcionario.find({ hid: req.params.id }).then((fun) => {
+    //console.log("asdasd", fun);
     consulta
       .find({
         fid: {
@@ -391,7 +392,7 @@ app.get("/api/funcionario/:id/medicos", (req, res) => {
 });
 
 app.get("/api/hospital/:id/medicos", (req, res) => {
-  funcionario.find({ _hid: req.param.id }).then((fun) => {
+  funcionario.find({ hid: req.params.id }).then((fun) => {
     console.log("asdasd", fun);
     medico
       .find({
