@@ -59,7 +59,7 @@ app.get("/api", (req, res) => {
 });
 app.get("/api/teste", (req, res) => {
   // a document instance
-  xhr.open("GET","cmaisoumenos.herokuapp.com/api/consulta")
+  xhr.open("GET", "cmaisoumenos.herokuapp.com/api/consulta");
 });
 //
 // GET ALL
@@ -185,12 +185,9 @@ app.get("/api/consulta/:id/pegaPaciente", (req, res) => {
 });
 
 app.get("/api/paciente/:id/pegaConsulta", (req, res) => {
-  consulta
-    .find({ pid: req.params.id })
-    .then((fun) => {
+  consulta.find({ pid: req.params.id }).then((fun) => {
     console.log("asdasd", fun);
     res.send(fun);
-    
   });
 });
 
@@ -211,76 +208,73 @@ app.get("/api/consulta/:id/pegaMedico", (req, res) => {
               $in: pac.map((c) => c.mid),
             },
           })
-          .then((poc)=>{
+          .then((poc) => {
             res.send(poc);
-          })
-        
+          });
       });
   });
 });
 
-app.get("/api/paciente/:id/consulta/hospital",(req,res)=>{
-    consulta
+app.get("/api/paciente/:id/consulta/hospital", (req, res) => {
+  consulta
     .find({ pid: req.params.id })
     .then((doc) => {
       console.log("getbyId >>>");
       console.log(doc);
       funcionario
-      .find({
-        _id: {
-          $in: doc.map((c) => c.fid),
-        },
-      })
-      .then((pac) => {
-        console.log("asdasd", pac);
-        hospital
-          .find({
-            _id: {
-              $in: pac.map((c) => c.hid),
-            },
-          })
-          .then((poc)=>{
-            res.send(poc);
-          })
-        
-      });
+        .find({
+          _id: {
+            $in: doc.map((c) => c.fid),
+          },
+        })
+        .then((pac) => {
+          console.log("asdasd", pac);
+          hospital
+            .find({
+              _id: {
+                $in: pac.map((c) => c.hid),
+              },
+            })
+            .then((poc) => {
+              res.send(poc);
+            });
+        });
     })
     .catch((err) => {
       console.log(err);
       res.status(404).send(" 404 - Usuario não encontrado");
     });
-})
-app.get("/api/paciente/:id/consulta/medico",(req,res)=>{
+});
+app.get("/api/paciente/:id/consulta/medico", (req, res) => {
   consulta
-  .find({ pid: req.params.id })
-  .then((doc) => {
-    console.log("getbyId >>>");
-    console.log(doc);
-    funcionario
-    .find({
-      _id: {
-        $in: doc.map((c) => c.fid),
-      },
-    })
-    .then((pac) => {
-      console.log("asdasd", pac);
-      medico
+    .find({ pid: req.params.id })
+    .then((doc) => {
+      console.log("getbyId >>>");
+      console.log(doc);
+      funcionario
         .find({
           _id: {
-            $in: pac.map((c) => c.mid),
+            $in: doc.map((c) => c.fid),
           },
         })
-        .then((poc)=>{
-          res.send(poc);
-        })
-      
+        .then((pac) => {
+          console.log("asdasd", pac);
+          medico
+            .find({
+              _id: {
+                $in: pac.map((c) => c.mid),
+              },
+            })
+            .then((poc) => {
+              res.send(poc);
+            });
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(404).send(" 404 - Usuario não encontrado");
     });
-  })
-  .catch((err) => {
-    console.log(err);
-    res.status(404).send(" 404 - Usuario não encontrado");
-  });
-})
+});
 
 app.get("/api/hospital/:id", (req, res) => {
   hospital
@@ -404,6 +398,18 @@ app.get("/api/funcionario/:id/medicos", (req, res) => {
   });
 });
 
+app.get("/api/hospital/:id/funcionario/:id2", (req, res) => {
+  funcionario.find({ hid: req.params.id }).then((fun) => {
+    console.log("asdasd", fun);
+    fun.forEach((element) => {
+      if (element.mid == req.params.id2) {
+        console.log(element);
+        res.send(element);
+      }
+    });
+  });
+});
+
 app.get("/api/hospital/:id/medicos", (req, res) => {
   funcionario.find({ hid: req.params.id }).then((fun) => {
     console.log("asdasd", fun);
@@ -419,29 +425,24 @@ app.get("/api/hospital/:id/medicos", (req, res) => {
       });
   });
 });
-app.get("/api/funcionario/:id/medicos",(req,res) => {
 
+app.get("/api/funcionario/:id/medicos", (req, res) => {
   var k = req.params.id;
 
   console.log(k);
-  funcionario
-  .find({_id:k})
-  .then((fun)=>{
-    console.log("asdasd",fun)
-         medico
-            .find(
-              {
-                _id:{
-                  $in:fun.map(c=>c.mid)
-                }
-              }
-            )
-            .then((pac)=>{
-              console.log("asdasd",pac)
-              res.send(pac);
-            });
-      
+  funcionario.find({ _id: k }).then((fun) => {
+    console.log("asdasd", fun);
+    medico
+      .find({
+        _id: {
+          $in: fun.map((c) => c.mid),
+        },
+      })
+      .then((pac) => {
+        console.log("asdasd", pac);
+        res.send(pac);
       });
+  });
 });
 //
 // POST
@@ -687,8 +688,7 @@ app.put("/api/consulta/:id", (req, res) => {
 
       reso.pid = req.body.pid;
       reso.fid = req.body.fid;
-      reso.time = Date(req.body.time),
-      reso.sintomas = req.body.sintomas;
+      (reso.time = Date(req.body.time)), (reso.sintomas = req.body.sintomas);
       reso.valor = req.body.valor;
 
       reso
