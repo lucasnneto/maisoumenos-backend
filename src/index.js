@@ -565,7 +565,7 @@ app.put("/api/consulta/:id", (req, res) => {
 
       reso.pid = req.body.pid;
       reso.fid = req.body.fid;
-      reso.time = Date.now();
+      reso.time = Date(req.body.time),
       reso.sintomas = req.body.sintomas;
       reso.valor = req.body.valor;
 
