@@ -2,6 +2,9 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+const xhr = new XMLHttpRequest();
+
 require("../models/consulta");
 require("../models/hospital");
 require("../models/medico");
@@ -161,6 +164,111 @@ app.get("/api/consulta/:id", (req, res) => {
       res.status(404).send(" 404 - Usuario não encontrado");
     });
 });
+
+app.get("/api/consulta/:id/pegaPaciente", (req, res) => {
+  consulta.find({ _id: req.params.id }).then((fun) => {
+    console.log("asdasd", fun);
+    paciente
+      .find({
+        _id: {
+          $in: fun.map((c) => c.pid),
+        },
+      })
+      .then((pac) => {
+        console.log("asdasd", pac);
+        res.send(pac);
+      });
+  });
+});
+
+app.get("/api/consulta/:id/pegaMedico", (req, res) => {
+  consulta.find({ _id: req.params.id }).then((fun) => {
+    console.log("asdasd", fun);
+    funcionario
+      .find({
+        _id: {
+          $in: fun.map((c) => c.fid),
+        },
+      })
+      .then((pac) => {
+        console.log("asdasd", pac);
+        medico
+          .find({
+            _id: {
+              $in: pac.map((c) => c.mid),
+            },
+          })
+          .then((poc)=>{
+            res.send(poc);
+          })
+        
+      });
+  });
+});
+
+app.get("/api/paciente/:id/consulta/hospital",(req,res)=>{
+    consulta
+    .find({ pid: req.params.id })
+    .then((doc) => {
+      console.log("getbyId >>>");
+      console.log(doc);
+      funcionario
+      .find({
+        _id: {
+          $in: doc.map((c) => c.fid),
+        },
+      })
+      .then((pac) => {
+        console.log("asdasd", pac);
+        hospital
+          .find({
+            _id: {
+              $in: pac.map((c) => c.hid),
+            },
+          })
+          .then((poc)=>{
+            res.send(poc);
+          })
+        
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(404).send(" 404 - Usuario não encontrado");
+    });
+})
+app.get("/api/paciente/:id/consulta/medico",(req,res)=>{
+  consulta
+  .find({ pid: req.params.id })
+  .then((doc) => {
+    console.log("getbyId >>>");
+    console.log(doc);
+    funcionario
+    .find({
+      _id: {
+        $in: doc.map((c) => c.fid),
+      },
+    })
+    .then((pac) => {
+      console.log("asdasd", pac);
+      medico
+        .find({
+          _id: {
+            $in: pac.map((c) => c.mid),
+          },
+        })
+        .then((poc)=>{
+          res.send(poc);
+        })
+      
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+    res.status(404).send(" 404 - Usuario não encontrado");
+  });
+})
+
 app.get("/api/hospital/:id", (req, res) => {
   hospital
     .find({ _id: req.params.id })
